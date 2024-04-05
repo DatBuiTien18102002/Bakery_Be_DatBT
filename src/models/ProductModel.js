@@ -23,7 +23,6 @@ const productSchema = new mongoose.Schema(
         ]
     },
     {
-        // Mongoose sẽ tự động thêm hai trường createdAt và updatedAt vào mỗi bản ghi để theo dõi thời gian tạo và thời gian cập nhật.
         timestamps: true
     }
 );

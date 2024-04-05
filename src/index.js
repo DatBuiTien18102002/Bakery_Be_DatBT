@@ -30,16 +30,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-// app.use(express.urlencoded({
-//     extended: true
-// }))
-
-// app.use(express.json());
-
 routes(app);
 
-
-// mongoose.connect(`mongodb+srv://datfit1810:${process.env.MONGO_DB}@cluster0.fg00x5l.mongodb.net/?retryWrites=true&w=majority`)
 mongoose.connect(process.env.MONGO_DB)
     .then(() => {
         console.log("Connect Db success");

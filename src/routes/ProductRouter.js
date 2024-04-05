@@ -9,9 +9,6 @@ router.put('/update-product/:id', productController.updateProduct);
 router.get('/get-detail/:id', productController.getDetailProduct);
 router.delete('/delete-product/:id', productController.deleteProduct);
 router.get('/getProducts', productController.getProducts);
-
-
-//Nên tạo const ở fe rồi dùng select để chọn
 router.get('/getAllType', productController.getAllType);
 
 

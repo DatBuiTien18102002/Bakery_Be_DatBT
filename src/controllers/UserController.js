@@ -7,7 +7,6 @@ const createUser = async (req, res) => {
         const isCheckEmail = reg.test(email);
 
         if (!email || !password || !confirmPassword) {
-            //Thiếu thông tin
             return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'
@@ -41,7 +40,6 @@ const loginUser = async (req, res) => {
         const isCheckEmail = reg.test(email);
 
         if (!email || !password) {
-            //Thiếu thông tin
             return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'

@@ -72,7 +72,6 @@ const getDetailProduct = (id) => {
         try {
             const detailProduct = await Product.findOne({ _id: id })
 
-
             resolve({
                 status: '200',
                 message: 'Get detail product success',
@@ -112,10 +111,6 @@ const deleteProduct = (id) => {
 const getProducts = (limit = 0, page = 1, _sort = "", _order = "", filter = {}) => {
     return new Promise(async (resolve, reject) => {
         try {
-
-
-            //Lấy giá trị tương đối của name
-            //$regex là một toán tử dùng để thực hiện truy vấn dựa trên biểu thức chính quy (regex) để lọc các documents dựa trên một mẫu ký tự
             if (filter.name) {
                 filter = {
                     ...filter,

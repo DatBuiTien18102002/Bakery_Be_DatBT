@@ -20,9 +20,7 @@ const createUser = (newUser) => {
                 });
             }
 
-            // 10: Là số lượt lặp (rounds) được sử dụng trong quá trình tạo hash. Càng cao giá trị này, thời gian tính toán càng tăng, làm tăng độ khó cho bất kỳ tấn công brute-force nào.
             const hash = bcrypt.hashSync(password, 10);
-            //ko cần lưu confirm password vào db
             const createUser = await User.create({
                 ...newUser, password: hash
             })

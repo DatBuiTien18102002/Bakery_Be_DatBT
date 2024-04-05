@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema({
     deliveredAt: { type: Date }
 },
     {
-        // Mongoose sẽ tự động thêm hai trường createdAt và updatedAt vào mỗi bản ghi để theo dõi thời gian tạo và thời gian cập nhật.
+        // Auto add createAdd and UpdateAdd
         timestamps: true
     }
 );

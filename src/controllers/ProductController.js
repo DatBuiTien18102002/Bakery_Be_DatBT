@@ -10,7 +10,6 @@ const createProduct = async (req, res) => {
         } = req.body;
 
         if (!name || !type || !price || !countInStock) {
-            //Thiếu thông tin
             return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'

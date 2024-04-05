@@ -10,22 +10,18 @@ const createOrder = (newOrder) => {
         try {
             const promises = orderItems.map(async (order) => {
                 const productData = await Product.findOneAndUpdate(
-                    //Phần tìm
+                    //find
                     {
                         _id: order._id,
-                        //coutInStock phải lớn hơn hoặc bằng (gte)  order.amount
                         countInStock: { $gte: order.amount }
                     },
-                    //Phần update
-                    // Sử dụng $inc để tăng (+) hoặc giảm (-) giá trị của một trường trong bản ghi.
-                    // countInStock giảm đi order.amount (đã bán đi) và selled tăng lên order.amount
+                    //update
                     {
                         $inc: {
                             countInStock: -order.amount,
                             sell: +order.amount
                         }
                     },
-                    // Tùy chọn này đảm bảo rằng kết quả trả về sẽ là bản ghi đã được cập nhật, chứ không phải bản ghi gốc trước khi cập nhật
                     { new: true }
                 )
                 if (productData) {
@@ -43,34 +39,15 @@ const createOrder = (newOrder) => {
                 }
 
             })
-            //Đợi tất cả promise ở trên hoàn thành
             const results = await Promise.all(promises)
 
-            //Lọc các sản phẩm có số lượng mua vượt quá số lượng tồn kho
             const newData = results && results.filter((item) => item.id)
             if (newData.length) {
-                // const arrId = []
-                // newData.forEach((item) => {
-                //     arrId.push(item.id)
-                // })
                 resolve({
                     status: 'ERR',
-                    // message: `San pham voi id: ${arrId.join(',')} khong du hang`
                     message: `San pham voi id: ${newData.map((item) => item.id).join(',')} khong du hang`
                 })
             } else {
-                // const createdOrder = await Order.create({
-                //     orderItems,
-                //     shippingAddress: {
-                //         email,
-                //         address,
-                //         city, phone
-                //     },
-                //     paymentMethod,
-                //     shippingMethod,
-                //     price,
-                //     userId,
-                // })
                 const createdOrder = await Order.create({ ...newOrder });
                 if (createdOrder) {
                     resolve({
@@ -186,7 +163,6 @@ const updateOrder = (id, data) => {
 const cancelOrder = (id, data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let orders = [];
             const promises = data.map(async (orderItemProduct) => {
                 const productData = await Product.findOneAndUpdate(
                     {
@@ -219,7 +195,6 @@ const cancelOrder = (id, data) => {
             if (newData.length) {
                 resolve({
                     status: 'ERR',
-                    // message: `San pham voi id: ${arrId.join(',')} khong du hang`
                     message: `San pham voi id:${newData.map((item) => item.id).join(',')} khong ton tai`
                 })
             }
@@ -235,7 +210,6 @@ const cancelOrder = (id, data) => {
             resolve({
                 status: '200',
                 message: 'Success',
-                // data: order
             })
 
         } catch (e) {
