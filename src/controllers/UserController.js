@@ -109,6 +109,21 @@ const handleGoogleAuth = async (accessToken, refreshToken, profile, done) => {
         let user = await User.findOne({
             ggId: profile.id
         })
+        let emailUser = await User.findOne({
+            email: profile.emails[0].value
+        })
+
+        if (!user && emailUser) {
+            user = new User({
+                ggId: profile.id,
+                name: profile.displayName,
+                avatar: profile.photos[0].value,
+                provider: "google",
+            });
+
+            await user.save();
+            return done(null, user);
+        }
 
         if (!user) {
             user = new User({
