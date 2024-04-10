@@ -61,7 +61,6 @@ const loginUser = (user) => {
                 })
             }
 
-
             const access_token = await generalAccessToken({
                 id: checkUser.id,
                 isAdmin: checkUser.isAdmin
@@ -134,6 +133,7 @@ const deleteUser = (id) => {
         }
     })
 }
+
 const deleteMany = (ids) => {
     return new Promise(async (resolve, reject) => {
         try {

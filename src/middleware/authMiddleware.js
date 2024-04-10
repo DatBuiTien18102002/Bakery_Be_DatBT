@@ -35,7 +35,8 @@ const authUserMiddleware = (req, res, next) => {
             })
         }
         const { payload } = user;
-        if (payload?.isAdmin || payload?.id === userId) {
+
+        if (payload?.isAdmin || payload?.id == userId) {
             next()
         } else {
             return res.status(403).json({

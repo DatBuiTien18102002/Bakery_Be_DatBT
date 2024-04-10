@@ -1,8 +1,5 @@
 const Order = require("../models/OrderModel");
 const Product = require("../models/ProductModel");
-const bcrypt = require('bcrypt');
-
-const { generalAccessToken, generalRefreshToken } = require("./jwtService");
 
 const createOrder = (newOrder) => {
     const { orderItems } = newOrder;
@@ -89,6 +86,7 @@ const getAllOrder = () => {
         }
     })
 }
+
 const getOrderById = (id) => {
     return new Promise(async (resolve, reject) => {
         try {

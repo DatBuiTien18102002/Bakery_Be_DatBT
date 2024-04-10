@@ -1,4 +1,6 @@
 const UserService = require('../services/UserService');
+const User = require("../models/UserModel");
+const { generalAccessToken, generalRefreshToken } = require("../services/jwtService");
 
 const createUser = async (req, res) => {
     try {
@@ -72,6 +74,85 @@ const loginUser = async (req, res) => {
     }
 }
 
+const loginUserBySocialMedia = async (req, res) => {
+    if (req.user) {
+        const access_token = await generalAccessToken({
+            id: req.user._id,
+            isAdmin: req.user.isAdmin
+        })
+
+        const refresh_token = await generalRefreshToken({
+            id: req.user._id,
+            isAdmin: req.user.isAdmin
+        })
+
+        if (refresh_token) {
+            res.cookie('refresh_token', refresh_token, {
+                httpOnly: true,
+                secure: false,
+                samesite: 'strict'
+            });
+        }
+
+        return res.status(200).json({
+            message: 'Login Success',
+            access_token,
+        });
+    }
+    return res.status(200).json({
+        message: 'Not login by social media',
+    });
+}
+
+const handleGoogleAuth = async (accessToken, refreshToken, profile, done) => {
+    try {
+        let user = await User.findOne({
+            ggId: profile.id
+        })
+
+        if (!user) {
+            user = new User({
+                ggId: profile.id,
+                name: profile.displayName,
+                email: profile.emails[0].value,
+                avatar: profile.photos[0].value,
+                provider: "google",
+            });
+
+            await user.save();
+            return done(null, user);
+        }
+
+        return done(null, user);
+    } catch (error) {
+        return done(error, null)
+    }
+}
+
+const handleFaceBookAuth = async (accessToken, refreshToken, profile, done) => {
+    try {
+        let user = await User.findOne({
+            fbId: profile.id
+        })
+
+        if (!user) {
+            user = new User({
+                fbId: profile.id,
+                name: profile.displayName,
+                avatar: profile.photos[0].value,
+                provider: "facebook"
+            });
+
+            await user.save();
+            return done(null, user);
+        }
+
+        return done(null, user);
+    } catch (error) {
+        return done(error, null)
+    }
+}
+
 const updateUser = async (req, res) => {
     try {
         const userId = req.params.id;
@@ -113,6 +194,7 @@ const deleteUser = async (req, res) => {
         })
     }
 }
+
 const deleteMany = async (req, res) => {
     try {
         const ids = req.body;
@@ -204,14 +286,24 @@ const logoutUser = async (req, res) => {
     }
 }
 
+const logoutUserSocialMedia = async (req, res) => {
+    req.logout(function (err) {
+        if (err) { console.log(err); return next(err) }
+    })
+}
+
 module.exports = {
     createUser,
     loginUser,
+    loginUserBySocialMedia,
+    handleGoogleAuth,
+    handleFaceBookAuth,
     updateUser,
     deleteUser,
     deleteMany,
     getAllUser,
     getDetailUser,
     refreshToken,
-    logoutUser
+    logoutUser,
+    logoutUserSocialMedia
 }

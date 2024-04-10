@@ -1,7 +1,4 @@
 const Product = require("../models/ProductModel");
-const bcrypt = require('bcrypt');
-
-const { generalAccessToken, generalRefreshToken } = require("./jwtService");
 
 const createProduct = (newProduct) => {
     const {

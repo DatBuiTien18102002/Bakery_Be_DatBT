@@ -1,11 +1,15 @@
 const express = require("express");
 const router = express.Router();
+
 const userController = require('../controllers/UserController');
 const { authMiddleware, authUserMiddleware } = require("../middleware/authMiddleware");
 
+
 router.post('/sign-up', userController.createUser)
 router.post('/sign-in', userController.loginUser)
+router.get('/social-auth', userController.loginUserBySocialMedia)
 router.get('/log-out', userController.logoutUser)
+router.get('/social-out', userController.logoutUserSocialMedia)
 router.put('/update-user/:id', authUserMiddleware, userController.updateUser)
 router.delete('/delete-user/:id', authMiddleware, userController.deleteUser)
 router.delete('/delete-many', authMiddleware, userController.deleteMany)
