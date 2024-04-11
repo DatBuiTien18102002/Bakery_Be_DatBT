@@ -78,7 +78,7 @@ const getDetailOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
     try {
         const orderId = req.params.id;
-        const data = req.body;
+        const data = req.body?.infoUpdate;
         if (!orderId) {
             return res.status(400).json({
                 status: 'ERR',
@@ -98,8 +98,9 @@ const updateOrder = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     try {
-        const data = req.body.orderItems;
+        const data = req.body?.orderItems;
         const orderId = req.params.id;
+
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
