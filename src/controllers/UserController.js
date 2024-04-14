@@ -55,17 +55,19 @@ const loginUser = async (req, res) => {
 
         const response = await UserService.loginUser(req.body);
 
-        const { refresh_token, ...newResponse } = response;
+        // const { refresh_token, ...newResponse } = response;
 
 
-        if (refresh_token) {
-            res.cookie('refresh_token', refresh_token, {
-                httpOnly: true,
-                secure: false,
-                samesite: 'strict'
-            });
-        }
-        return res.status(200).json(newResponse);
+        // if (refresh_token) {
+        //     res.cookie('refresh_token', refresh_token, {
+        //         httpOnly: true,
+        //         secure: false,
+        //         samesite: 'strict'
+        //     });
+        // }
+        // return res.status(200).json(newResponse);
+
+        return res.status(200).json(response);
 
     } catch (e) {
         return res.status(409).json({
@@ -262,10 +264,35 @@ const getDetailUser = async (req, res) => {
     }
 }
 
+//refresh token with cookie
+// const refreshToken = async (req, res) => {
+
+//     try {
+//         const token = req.cookies.refresh_token;
+//         if (!token) {
+//             return res.status(400).json({
+//                 status: 'ERR',
+//                 message: 'The refresh token is required'
+//             })
+//         }
+//         const response = await UserService.refreshToken(token);
+//         return res.status(200).json(response);
+
+//     } catch (e) {
+//         if (e.message === "jwt expired") {
+//             res.clearCookie('refresh_token');
+//         }
+//         return res.status(404).json({
+//             err: e.message
+//         })
+//     }
+// }
+
+//refresh token with local storage
 const refreshToken = async (req, res) => {
 
     try {
-        const token = req.cookies.refresh_token;
+        const token = req.headers?.token?.split(' ')[1];
         if (!token) {
             return res.status(400).json({
                 status: 'ERR',
@@ -276,10 +303,11 @@ const refreshToken = async (req, res) => {
         return res.status(200).json(response);
 
     } catch (e) {
-        if (e.message === "jwt expired") {
-            res.clearCookie('refresh_token');
-        }
-        return res.status(404).json({
+        // if (e.message === "jwt expired") {
+        //     res.clearCookie('refresh_token');
+        // }
+
+        return res.status(200).json({
             err: e.message
         })
     }
